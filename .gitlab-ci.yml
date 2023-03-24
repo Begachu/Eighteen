@@ -22,4 +22,4 @@ deploy-job:      # This job runs in the deploy stage.
     - docker container stop api-gateway
     - docker container rm api-gateway
     - sleep 1
-    - docker run -p 80:80 --name api-gateway --add-host=host.docker.internal:host-gateway api-gateway
+    - docker run -p 80:80 --name api-gateway --add-host=host.docker.internal:host-gateway -d api-gateway
