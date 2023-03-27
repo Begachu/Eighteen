@@ -43,7 +43,7 @@ public class TjCrawlerApplication_db implements CommandLineRunner {
         {
             for (int mon = 12;mon >= 1;mon--) {
 
-                List<SongInfoDTO> songInfos = TJSongListCrawlerUtil.crawling(year, mon);
+                List<SongInfoDTO> songInfos = TJSongListCrawlerUtil.crawling(TJSongListCrawlerUtil.searchByNewSong(year, mon));
 
                 if (songInfos == null) continue;
 

@@ -2,6 +2,7 @@ package com.edu.ssafy.tjcrawler;
 
 import com.edu.ssafy.tjcrawler.util.TJSongListCrawlerUtil;
 import com.edu.ssafy.tjcrawler.dto.SongInfoDTO;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,12 +36,12 @@ public class TjCrawlerApplication implements CommandLineRunner {
         {
             for (int mon = 12;mon >= 1;mon--) {
 
-                List<SongInfoDTO> songInfos = TJSongListCrawlerUtil.crawling(year, mon);
+                List<SongInfoDTO> songInfos = TJSongListCrawlerUtil.crawling(TJSongListCrawlerUtil.searchByNewSong(year, mon));
 
                 if (songInfos == null) continue;
 
                 // 아래 'System.out.println' sleep 역할을 함(DDoS 탐지 및 요청 거부 당하는걸 막기위함).
-                System.out.println(String.format("%d월%d : ", year, mon) + songInfos);
+//                System.out.println(String.format("%d월%d : ", year, mon) + songInfos);
 
                 // 노래 목록을 한 곳에 저장하기
                 _songInfos.addAll(songInfos);
@@ -65,10 +66,25 @@ public class TjCrawlerApplication implements CommandLineRunner {
         /********************************************************************
          *                          파일 저장 2
          ********************************************************************/
-        // Elasticsearch bulk insert문을 파일 한개로 저장하기
-        TJSongListCrawlerUtil.writeJson("C:\\OUTPUTS\\TEST", _songInfos);
+//        // json을 파일 한개로 저장하기
+//        TJSongListCrawlerUtil.writeJson("C:\\OUTPUTS\\TEST", _songInfos);
+//
+//        // Elasticsearch bulk insert문을 파일 한개로 저장하기
+//        TJSongListCrawlerUtil.writeJsonForElasticSearchBulkInsert("C:\\OUTPUTS\\TEST", _songInfos);
 
-        // Elasticsearch bulk insert문을 파일 한개로 저장하기
-        TJSongListCrawlerUtil.writeJsonForElasticSearchBulkInsert("C:\\OUTPUTS\\TEST", _songInfos);
+        System.out.println("Let's find hidden song list");
+        List<SongInfoDTO> hiddenSongs = TJSongListCrawlerUtil.crawlingHiddenSongs(_songInfos);
+
+
+        // 숨겨진 곡 정보를 json을 파일 한개로 저장하기
+//        TJSongListCrawlerUtil.writeJson("C:\\OUTPUTS\\hidden", hiddenSongs);
+        TJSongListCrawlerUtil.writeJson("./hidden", hiddenSongs);
+
+
+        // 숨겨진 곡 정보를 포함해서 Elasticsearch bulk insert문을 파일 한개로 저장하기
+        _songInfos.addAll(hiddenSongs);
+        System.out.println("hiddenSongs : " + hiddenSongs);
+        TJSongListCrawlerUtil.writeJsonForElasticSearchBulkInsert("all", _songInfos);
+        TJSongListCrawlerUtil.writeJson("all", hiddenSongs);
     }
 }
