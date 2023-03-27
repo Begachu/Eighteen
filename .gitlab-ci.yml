@@ -10,16 +10,25 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo -e "\033[32mbuilding docker image(nginx-api gateway)\033[0m"
     - docker build -t api-gateway .
 
-
-deploy-job:      # This job runs in the deploy stage.
+deploy-job:preparing_for_replace:
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
   environment: production
   only:
     - devops-component/api-gateway/develop
   allow_failure: true
+  needs: ["build-job"]
   script:
     - echo -e "\033[32mDeploying application...\033[0m"
     - docker container stop api-gateway
     - docker container rm api-gateway
-    - sleep 1
+
+
+deploy-job:build:      # This job runs in the deploy stage.
+  stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
+  environment: production
+  only:
+    - devops-component/api-gateway/develop
+  allow_failure: true
+  needs: ["deploy-job:preparing_for_replace"]
+  script:
     - docker run -p 80:80 --name api-gateway --add-host=host.docker.internal:host-gateway -d api-gateway
