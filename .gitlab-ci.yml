@@ -7,6 +7,7 @@ build-job:       # This job runs in the build stage, which runs first.
   only:
     - devops-component/api-gateway/develop
   script:
+    - cd api-gateway
     - echo -e "\033[32mbuilding docker image(nginx-api gateway)\033[0m"
     - docker build -t api-gateway .
 
