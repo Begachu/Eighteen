@@ -33,4 +33,4 @@ deploy-job:deploy:      # This job runs in the deploy stage.
   allow_failure: true
   needs: ["deploy-job:preparing_for_replace"]
   script:
-    - docker run -p 80:80 --name api-gateway --add-host=host.docker.internal:host-gateway -d api-gateway
+    - docker run -p 80:80 --name api-gateway --add-host=host.docker.internal:host-gateway -d itmagician/b304-eighteen:api-gateway
