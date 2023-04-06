@@ -297,7 +297,8 @@ def favorite_song(user_id):
     liked_songs = my_eigtheens_df.loc[(my_eigtheens_df['user_id'] == user_id), 'music_id'].tolist()
     all_songs = my_eigtheens_df.loc[~my_eigtheens_df['music_id'].isin(liked_songs), 'music_id'].tolist()
     scores = [(song, model.predict(user_id, song).est) for song in all_songs]
-    recommendation_list = [score[0] for score in sorted(scores, key=lambda x: x[1], reverse=True)[:20] if score[0] not in liked_songs]
+    recommendation_list = [score[0] for score in sorted(scores, key=lambda x: x[1], reverse=True)[:1000] if score[0] not in liked_songs]
+    recommendation_list = list(set(recommendation_list))[:20]
 
     return recommendation_list
 
