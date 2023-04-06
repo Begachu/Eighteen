@@ -212,6 +212,17 @@ def recommend_song_by_emotion(emotion, data_path=DATA_FILE, data_path2=DATA_FILE
     predicted_emotion = clf.predict(pred_X)
     music_df['emotion'] = predicted_emotion
 
+    music_df.loc[(music_df['emotion'] == 3) & (music_df['tempo'] >= 119), 'emotion'] = 1
+    music_df.loc[(music_df['emotion'] == 3) & (music_df['tempo'] >= 82), 'emotion'] = 3
+
+    sad_words = ['Sad','눈물', '이별']
+    love_words = ['사랑', 'love', 'Love']
+
+    for i, title in enumerate(music_df['title']):
+        if any(word in title for word in sad_words):
+            music_df.loc[i, 'emotion'] = 2
+        elif any(word in title for word in love_words):
+            music_df.loc[i, 'emotion'] = 4
 
     selected = music_df.loc[(music_df['emotion'] == emotion) & (music_df['popularity'] >= 30), 'id']
     result = random.sample(selected.tolist(), 20)
