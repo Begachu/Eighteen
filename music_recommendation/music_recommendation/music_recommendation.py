@@ -246,6 +246,26 @@ def recommend_song_by_situation(situation, data_path=DATA_FILE, data_path4=DATA_
     predicted_situation = svm_clf.predict(pred_X)
     music_df['situation'] = predicted_situation
     
+    music_df.loc[(music_df['situation'] == 1) & (music_df['tempo'] >= 167), 'situation'] = 1
+    music_df.loc[(music_df['situation'] == 2) & (music_df['tempo'] >= 90), 'situation'] = 2
+    music_df.loc[(music_df['situation'] == 3) & (music_df['tempo'] >= 179), 'situation'] = 3
+    music_df.loc[(music_df['situation'] == 4) & (music_df['tempo'] >= 109), 'situation'] = 4
+
+    date_words = ['사랑']
+    travel_words = ['여행']
+    breakup_words = ['이별']
+    wedding_words = ['결혼', '청혼']
+
+    for i, title in enumerate(music_df['title']):
+        if any(word in title for word in date_words):
+            music_df.loc[i, 'situation'] = 2
+        elif any(word in title for word in travel_words):
+            music_df.loc[i, 'situation'] = 4
+        elif any(word in title for word in breakup_words):
+            music_df.loc[i, 'situation'] = 5
+        elif any(word in title for word in wedding_words):
+            music_df.loc[i, 'situation'] = 6
+
 
     selected = music_df.loc[(music_df['situation'] == situation) & (music_df['popularity'] >= 30), 'id']
     result = random.sample(selected.tolist(), 20)
@@ -279,7 +299,7 @@ def recommend_song_by_weather(weather, data_path=DATA_FILE, data_path5=DATA_FILE
     music_df['weather'] = predicted
 
 
-    selected = music_df.loc[(music_df['weather'] == weather) & (music_df['popularity'] >= 30), 'id']
+    selected = music_df.loc[(music_df['weather'] == weather) & (music_df['popularity'] >= 40), 'id']
     result = random.sample(selected.tolist(), 20)
     
     return result
