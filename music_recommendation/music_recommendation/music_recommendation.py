@@ -16,6 +16,8 @@ from sklearn.svm import SVC
 from sklearn import svm
 from sklearn import preprocessing
 
+from sklearn.naive_bayes import GaussianNB
+
 import random
 
 DATA_DIR = "data"
@@ -173,17 +175,17 @@ def weather_classification(data_path=DATA_FILE, data_path5=DATA_FILE5):
     df = pd.DataFrame(data2)
     df = df.dropna(axis=0)
 
-    X = df[['energy', 'danceability', 'tempo']]
+    X = df[['energy', 'danceability', 'valence', 'tempo']]
     y = df['weather']
 
 
-    clf = DecisionTreeClassifier()
-    clf.fit(X, y)
+    gaussiannb = GaussianNB()
+    gaussiannb.fit(X, y)
 
-    pred_X = music_df[['energy', 'danceability', 'tempo']]
-    predicted_weather = clf.predict(pred_X)
+    pred_X = music_df[['energy', 'danceability', 'valence', 'tempo']]
+    predicted = gaussiannb.predict(pred_X)
 
-    return predicted_weather
+    return predicted
 
 
 def recommend_song_by_emotion(emotion, data_path=DATA_FILE, data_path2=DATA_FILE2):
@@ -265,15 +267,16 @@ def recommend_song_by_weather(weather, data_path=DATA_FILE, data_path5=DATA_FILE
     df = pd.DataFrame(data2)
     df = df.dropna(axis=0)
 
-    X = df[['energy', 'danceability', 'tempo']]
+    X = df[['energy', 'danceability', 'valence', 'tempo']]
     y = df['weather']
 
-    clf = DecisionTreeClassifier()
-    clf.fit(X, y)
 
-    pred_X = music_df[['energy', 'danceability', 'tempo']]
-    predicted_weather = clf.predict(pred_X)
-    music_df['weather'] = predicted_weather
+    gaussiannb = GaussianNB()
+    gaussiannb.fit(X, y)
+
+    pred_X = music_df[['energy', 'danceability', 'valence', 'tempo']]
+    predicted = gaussiannb.predict(pred_X)
+    music_df['weather'] = predicted
 
 
     selected = music_df.loc[(music_df['weather'] == weather) & (music_df['popularity'] >= 30), 'id']
