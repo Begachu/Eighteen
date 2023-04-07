@@ -22,7 +22,7 @@ export const searchUnregist = (token: string) => {
  * @param musicIdList 노래 번호 목록
  * @param token 토큰
  */
-export const addEighteenForSearch = (musicIdList: { id: number }[], token: string) => {
+export const addEighteenForSearch = (musicIdList: { id: number; title: string; singer: string }[], token: string) => {
   instance.defaults.headers["Authorization"] = token;
   return instance.put(`/elastic_search/data`, musicIdList);
 };
@@ -32,7 +32,10 @@ export const addEighteenForSearch = (musicIdList: { id: number }[], token: strin
  * @param musicIdList 노래 번호 목록
  * @param token 토큰
  */
-export const removeEighteenForSearch = (musicIdList: { id: number }[], token: string) => {
+export const removeEighteenForSearch = (
+  musicIdList: { id: number; title: string; singer: string }[],
+  token: string,
+) => {
   instance.defaults.headers["Authorization"] = token;
   return instance.delete(`/elastic_search/data`, { data: musicIdList });
 };

@@ -16,7 +16,6 @@ const Login = (): JSX.Element => {
       <div className="buttonDiv">
         <KakaoLoginButton />
         <GoogleLoginButton />
-        <NaverLoginButton />
       </div>
     </StyledDiv>
   );

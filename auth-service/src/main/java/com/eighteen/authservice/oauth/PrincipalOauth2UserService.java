@@ -26,7 +26,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        System.out.println("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
         OAuth2UserInfo oAuth2UserInfo = null;
         if(userRequest.getClientRegistration().getRegistrationId().equals("google")) {
             System.out.println("google");
@@ -40,9 +39,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
             oAuth2UserInfo = new KakaoUserInfo(oAuth2User.getAttributes());
         }
 
-        System.out.println("test----------------------------------------");
-        System.out.println(oAuth2UserInfo.getProviderId());
-        System.out.println(oAuth2UserInfo.getName());
         String provider = oAuth2UserInfo.getProvider();
         String providerId = oAuth2UserInfo.getProviderId();
         String userId = provider+"_"+providerId;

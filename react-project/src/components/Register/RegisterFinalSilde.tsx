@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import styled from "styled-components";
 import { userState } from "../../recoil/atom";
@@ -8,11 +9,13 @@ import { TextButton } from "../common/button";
  * 4번째 로그인 화면
  */
 const RegisterFinalSilde = (): JSX.Element => {
+  const navigate = useNavigate();
   const [user, setUser] = useRecoilState(userState);
 
   if (!user) return <></>;
 
   const onClick = () => {
+    navigate("/");
     setUser({ ...user, newby: false });
   };
 

@@ -28,7 +28,7 @@ const RecommendHeader = ({ weather }: Props): JSX.Element => {
   // 이미지
   const imgUrl = useMemo(() => {
     switch (header.type) {
-      case "myEighteen":
+      case "my_eighteen":
         return `${process.env.PUBLIC_URL}/img/my_eighteen.png`;
       case "ranking":
       case "emotion":
@@ -55,7 +55,7 @@ const RecommendHeader = ({ weather }: Props): JSX.Element => {
 };
 
 const HEADER_TEXT: Header[] = [
-  { type: "myEighteen", span: "취향맞춤 추천", header: "너도 몰랐던\n너의 에이틴" },
+  { type: "my_eighteen", span: "취향맞춤 추천", header: "너도 몰랐던\n너의 에이틴" },
   { type: "weather", span: "날씨기반 추천", header: "오늘 같은\n날씨엔" },
   { type: "ranking", span: "다들 뭐부를까?", header: "성별·나이별\n애창곡 랭킹" },
   { type: "emotion", span: "감정기반 추천", header: "지금 너의\n기분은?" },

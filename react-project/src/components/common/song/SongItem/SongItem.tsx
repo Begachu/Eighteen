@@ -32,6 +32,8 @@ const SongItem = ({ musicId, title, singer, isEighteen, onCustomClick, onFavorit
       <SongFavoriteButton
         isEighteen={eighteen}
         musicId={musicId}
+        title={title}
+        singer={singer}
         setEighteen={setEighteen}
         onCustomClick={onFavoriteBtnClick}
       />

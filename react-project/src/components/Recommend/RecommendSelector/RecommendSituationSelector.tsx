@@ -7,7 +7,7 @@ const RecommendSituationSelector = (): JSX.Element => {
   const [search, setSearch] = useSearchParams();
 
   useEffect(() => {
-    if (!search.get("situation")) toggleSearch("0");
+    if (!search.get("situation")) toggleSearch("1");
   }, []);
 
   const toggleSearch = (situation: string) => {
@@ -39,12 +39,12 @@ const StyledDiv = styled.div`
 `;
 
 const situdationList = [
-  { text: "회식 분위기업", value: "0" },
-  { text: "여행", value: "1" },
+  { text: "회식 분위기업", value: "1" },
+  { text: "여행", value: "4" },
   { text: "데이트", value: "2" },
-  { text: "결혼식 축가", value: "3" },
-  { text: "이별", value: "4" },
-  { text: "응원이 필요할때", value: "5" },
+  { text: "결혼식 축가", value: "6" },
+  { text: "이별", value: "5" },
+  { text: "응원이 필요할때", value: "3" },
 ];
 
 export default RecommendSituationSelector;

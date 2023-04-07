@@ -1,0 +1,29 @@
+version: '3.5'
+services:
+  mysql:
+    build: .
+    container_name: mysql
+    ports:
+     - "3306:3306"
+    volumes:
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    restart: always
+    # container_name: mysql-servver # 컨테이너 이름 설정
+    ports:
+      - "3306:3306" # 접근 포트 설정 (컨테이너 외부:컨테이너 내부)  <- 컨테이너 내부는 무조건 3306
+    environment: # -e 옵션
+      - MYSQL_USER=ssafy
+      - MYSQL_PASSWORD=b304b304
+      - MYSQL_DATABASE=eighteen # default 생성 DB Schema
+      - MYSQL_ROOT_PASSWORD=b304b304
+      - TZ=Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+
+    volumes:
+      - ./mysql-init-files/:/docker-entrypoint-initdb.d/
+      - ./mysql/data:/var/lib/mysql
+
+

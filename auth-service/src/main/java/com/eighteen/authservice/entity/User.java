@@ -36,13 +36,4 @@ public class User {
 
     @Column(name = "profileImage")
     private String profileImage;
-
-    @Column(name = "high_pitch")
-    private String highPitch;
-
-    @Column(name = "low_pitch")
-    private String lowPitch;
-
-    @Column(name = "vocal")
-    private String vocal;
 }

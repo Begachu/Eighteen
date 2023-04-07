@@ -38,8 +38,16 @@ const EnjoyHandBg = ({ show }: Props): JSX.Element => {
 };
 
 const StyledDiv = styled.div`
-  margin: 80px calc((100vw - 400px) / 2);
+  margin: 80px calc((100% - 400px) / 2);
   max-width: 400px;
+  -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  position: absolute;
+  width: 100%;
+  top: 0;
+  display: flex;
+  -webkit-box-pack: center;
+  justify-content: center;
   &.default {
     display: none;
   }
@@ -61,11 +69,6 @@ const StyledDiv = styled.div`
       animation-delay: 0.4s;
     }
   }
-  -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  position: absolute;
-  width: 100%;
-  top: 0;
   & * {
     top: 0;
     position: absolute;

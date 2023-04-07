@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Objects;
+
 
 @NoArgsConstructor
 @Getter
@@ -36,5 +38,26 @@ public class MusicDto {
         this.singer = music.getSinger();
         this.thumbnailUrl = music.getThumbnailUrl();
         this.isEighteen = isEighteen;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MusicDto musicDto = (MusicDto) o;
+        return Objects.equals(musicId, musicDto.musicId) &&
+                Objects.equals(title, musicDto.title) &&
+                Objects.equals(singer, musicDto.singer) &&
+                Objects.equals(thumbnailUrl, musicDto.thumbnailUrl) &&
+                Objects.equals(isEighteen, musicDto.isEighteen);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(musicId, title, singer, thumbnailUrl, isEighteen);
     }
 }

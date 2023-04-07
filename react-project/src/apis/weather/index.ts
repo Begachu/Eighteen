@@ -20,6 +20,22 @@ export const getWeatherImg = (weather: weather) => {
   }
 };
 
+export const getWeatherIdx = (weather: weather) => {
+  switch (weather) {
+    case "Clear":
+      return 1;
+    case "Atmosphere":
+    case "Clouds":
+      return 3;
+    case "Drizzle":
+    case "Rain":
+      return 2;
+    case "Snow":
+      return 4;
+  }
+  return 1;
+};
+
 const getWeatherKor = (weather: weather) => {
   switch (weather) {
     case "Atmosphere":

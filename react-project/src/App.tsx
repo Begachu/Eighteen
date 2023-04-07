@@ -117,7 +117,7 @@ const App = (): JSX.Element => {
 };
 
 const StyledDiv = styled.div`
-  min-height: 100vh;
+  height: 100vh;
   z-index: 0;
   position: relative;
   /* background-color: red; */
@@ -127,17 +127,31 @@ const StyledDiv = styled.div`
 
   .max-height {
     height: 100vh !important;
+    & > div {
+      -webkit-animation: none !important;
+      animation: none !important;
+    }
   }
 
   // 실제 페이지 정보가 담길 페이지 컴포넌트
   & > .Page {
-    height: ${() => window.innerHeight - 80}px;
+    flex: 1;
     width: 100%;
     box-sizing: border-box;
     overflow: auto;
+    overflow-x: hidden;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    & > div {
+      -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+      animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+      & > div {
+      }
+      & > h1 {
+      }
+    }
 
     // 스크롤 디자인 CSS
     &::-webkit-scrollbar {
@@ -149,7 +163,7 @@ const StyledDiv = styled.div`
       border-radius: 8px;
     }
     &::-webkit-scrollbar-track {
-      background-color: #00000080;
+      background-color: none;
     }
     & > .logo {
       position: relative;
@@ -180,13 +194,6 @@ const StyledDiv = styled.div`
     background: var(--gradation);
     filter: blur(80px);
     opacity: 0.75;
-  }
-
-  // navbar
-  & > *:last-child {
-    z-index: 1;
-    position: fixed;
-    bottom: 0;
   }
 `;
 

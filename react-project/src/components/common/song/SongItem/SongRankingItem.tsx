@@ -1,7 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import SongFavoriteButton from "./SongFavoriteButton";
 
 export interface Props {
   rank: number;
@@ -24,7 +23,7 @@ const SongRankingItem = ({ rank, musicId, title, singer, thumbnailUrl }: Props):
   };
 
   return (
-    <StyledLi title={title} singer={singer} onClick={onClick}>
+    <StyledLi title={title} singer={singer} onClickCapture={onClick}>
       <div className="rank">{rank}</div>
       <img src={thumbnailUrl} />
       <div>

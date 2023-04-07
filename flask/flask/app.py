@@ -16,6 +16,13 @@ import json
 from surprise import Reader, Dataset
 from surprise import SVD
 
+from sklearn.svm import SVC
+from sklearn import svm
+from sklearn import preprocessing
+
+from sklearn.naive_bayes import GaussianNB
+
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True)
 
@@ -122,8 +129,11 @@ def emotion_classification(data_path=EMOTION_DATA):
         session.query(E_Music).delete()
         session.commit()
         music_features = session.query(Music_Feature).all()
+        musics = session.query(Music).all()
 
-    music_df = pd.DataFrame([mf.__dict__ for mf in music_features])
+    music_feature_df = pd.DataFrame([mf.__dict__ for mf in music_features])
+    music_df = pd.DataFrame([mf.__dict__ for mf in musics])
+    df = pd.merge(music_feature_df, music_df, on=["music_id"])
 
     with open(data_path, encoding="utf-8") as f:
         data = json.loads(f.read())
@@ -137,10 +147,23 @@ def emotion_classification(data_path=EMOTION_DATA):
     clf = DecisionTreeClassifier()
     clf.fit(X, y)
 
-    pred_X = music_df[['energy', 'dance_ability', 'tempo']]
+    pred_X = df[['energy', 'dance_ability', 'tempo']]
     predicted_emotion = clf.predict(pred_X)
+    df['emotion'] = predicted_emotion
 
-    for music_id, popularity, emotion in zip(music_df['music_id'], music_df['popularity'], predicted_emotion):
+    df.loc[(df['emotion'] == 3) & (df['tempo'] >= 119), 'emotion'] = 1
+    df.loc[(df['emotion'] == 3) & (df['tempo'] >= 82), 'emotion'] = 3
+
+    sad_words = ['Sad','눈물', '이별']
+    love_words = ['사랑', 'love', 'Love']
+
+    for i, title in enumerate(df['title']):
+        if any(word in title for word in sad_words):
+            df.loc[i, 'emotion'] = 2
+        elif any(word in title for word in love_words):
+            df.loc[i, 'emotion'] = 4
+
+    for music_id, popularity, emotion in zip(df['music_id'], df['popularity'], df['emotion']):
         e_music = E_Music(music_id=music_id, popularity=popularity, emotion_id=emotion)
         session.add(e_music)
 
@@ -158,8 +181,11 @@ def situation_classification(data_path=SITUATION_DATA):
         session.query(S_Music).delete()
         session.commit()
         music_features = session.query(Music_Feature).all()
+        musics = session.query(Music).all()
 
-    music_df = pd.DataFrame([mf.__dict__ for mf in music_features])
+    music_feature_df = pd.DataFrame([mf.__dict__ for mf in music_features])
+    music_df = pd.DataFrame([mf.__dict__ for mf in musics])
+    df = pd.merge(music_feature_df, music_df, on=["music_id"])
 
     with open(data_path, encoding="utf-8") as f:
         data = json.loads(f.read())
@@ -170,13 +196,38 @@ def situation_classification(data_path=SITUATION_DATA):
     X = situation_df[['energy', 'dance_ability', 'tempo']]
     y = situation_df['situation']
 
-    clf = DecisionTreeClassifier()
-    clf.fit(X, y)
+    scaler = preprocessing.StandardScaler()
+    X = scaler.fit_transform(X)
 
-    pred_X = music_df[['energy', 'dance_ability', 'tempo']]
-    predicted_situation = clf.predict(pred_X)
+    svm_clf = svm.SVC()
+    svm_clf.fit(X, y)
 
-    for music_id, popularity, situation in zip(music_df['music_id'], music_df['popularity'], predicted_situation):
+    pred_X = df[['energy', 'dance_ability', 'tempo']]
+    pred_X = scaler.transform(pred_X)
+    predicted_situation = svm_clf.predict(pred_X)
+    df['situation'] = predicted_situation
+    
+    df.loc[(df['situation'] == 1) & (df['tempo'] >= 167), 'situation'] = 1
+    df.loc[(df['situation'] == 2) & (df['tempo'] >= 90), 'situation'] = 2
+    df.loc[(df['situation'] == 3) & (df['tempo'] >= 179), 'situation'] = 3
+    df.loc[(df['situation'] == 4) & (df['tempo'] >= 109), 'situation'] = 4
+
+    date_words = ['사랑']
+    travel_words = ['여행']
+    breakup_words = ['이별']
+    wedding_words = ['결혼', '청혼']
+
+    for i, title in enumerate(df['title']):
+        if any(word in title for word in date_words):
+            df.loc[i, 'situation'] = 2
+        elif any(word in title for word in travel_words):
+            df.loc[i, 'situation'] = 4
+        elif any(word in title for word in breakup_words):
+            df.loc[i, 'situation'] = 5
+        elif any(word in title for word in wedding_words):
+            df.loc[i, 'situation'] = 6
+
+    for music_id, popularity, situation in zip(df['music_id'], df['popularity'], df['situation']):
         s_music = S_Music(music_id=music_id, popularity=popularity, situation_id=situation)
         session.add(s_music)
 
@@ -203,16 +254,18 @@ def weather_classification(data_path=WEATHER_DATA):
     weather_df = pd.DataFrame(data)
     weather_df = weather_df.dropna(axis=0)
 
-    X = weather_df[['energy', 'dance_ability', 'tempo']]
+    X = weather_df[['energy', 'dance_ability', 'valence', 'tempo']]
     y = weather_df['weather']
 
-    clf = DecisionTreeClassifier()
-    clf.fit(X, y)
+    gaussiannb = GaussianNB()
+    gaussiannb.fit(X, y)
 
-    pred_X = music_df[['energy', 'dance_ability', 'tempo']]
-    predicted_weather = clf.predict(pred_X)
+    pred_X = music_df[['energy', 'dance_ability', 'valence', 'tempo']]
+    predicted_weather = gaussiannb.predict(pred_X)
+    music_df['weather'] = predicted_weather
 
-    for music_id, popularity, weather in zip(music_df['music_id'], music_df['popularity'], predicted_weather):
+
+    for music_id, popularity, weather in zip(music_df['music_id'], music_df['popularity'], music_df['weather']):
         w_music = W_Music(music_id=music_id, popularity=popularity, weather_id=weather)
         session.add(w_music)
 
@@ -244,7 +297,8 @@ def favorite_song(user_id):
     liked_songs = my_eigtheens_df.loc[(my_eigtheens_df['user_id'] == user_id), 'music_id'].tolist()
     all_songs = my_eigtheens_df.loc[~my_eigtheens_df['music_id'].isin(liked_songs), 'music_id'].tolist()
     scores = [(song, model.predict(user_id, song).est) for song in all_songs]
-    recommendation_list = [score[0] for score in sorted(scores, key=lambda x: x[1], reverse=True)[:20] if score[0] not in liked_songs]
+    recommendation_list = [score[0] for score in sorted(scores, key=lambda x: x[1], reverse=True)[:1000] if score[0] not in liked_songs]
+    recommendation_list = list(set(recommendation_list))[:20]
 
     return recommendation_list
 
@@ -257,7 +311,7 @@ def emotion_recommend(emotion_id):
         for music in recommended_e_musics:
             result.append(music.music_id)
 
-        return result
+    return result
     
 @app.route('/flask/recommend/situation/<situation_id>')
 def situation_recommend(situation_id):
@@ -273,13 +327,13 @@ def situation_recommend(situation_id):
 @app.route('/flask/recommend/weather/<weather_id>')
 def weather_recommend(weather_id):
     with DBSession() as session:
-        popular_w_musics = session.query(W_Music).filter(W_Music.weather_id==weather_id, W_Music.popularity>=30).all()
+        popular_w_musics = session.query(W_Music).filter(W_Music.weather_id==weather_id, W_Music.popularity>=40).all()
         recommended_w_musics = random.sample(popular_w_musics, k=20)
         result = []
         for music in recommended_w_musics:
             result.append(music.music_id)
 
-        return result
+    return result
 
 if __name__ == "__main__" :
     app.run(host='0.0.0.0', debug=True)

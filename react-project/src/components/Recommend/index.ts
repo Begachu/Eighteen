@@ -1,4 +1,4 @@
 export * from "./RecommendHeader";
 export * from "./RecommendList";
 
-export type RecommendType = "myEighteen" | "weather" | "ranking" | "emotion" | "situation";
+export type RecommendType = "my_eighteen" | "weather" | "ranking" | "emotion" | "situation";

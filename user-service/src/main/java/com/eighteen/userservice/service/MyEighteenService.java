@@ -24,10 +24,7 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -78,15 +75,17 @@ public class MyEighteenService {
 
         List<MyEighteen> myEighteens = myEighteenRepository.findByUser(user);
         Random random = new Random();
-        List<MusicDto> randoms = new ArrayList<>();
+        Set<MusicDto> randoms = new HashSet<>();
 
         if (myEighteens.size() > 5) {
-            for (int i = 0; i < 5; i++) {
+            while (randoms.size() < 5) {
                 int randomIndex = random.nextInt(myEighteens.size());
                 MyEighteen randomElement = myEighteens.get(randomIndex);
                 MusicDto randomMusic = new ModelMapper().map(randomElement.getMusic(), MusicDto.class);
                 randomMusic.setIsEighteen(Boolean.TRUE);
-                randoms.add(randomMusic);
+                if (!randoms.contains(randomMusic)) {
+                    randoms.add(randomMusic);
+                }
             }
         }
         else {
@@ -105,16 +104,14 @@ public class MyEighteenService {
 
         User user = userRepository.findByUserId(userId);
         Music music = musicRepository.findByMusicId(requestEighteenDto.getMusicId());
-        MyEighteen myEighteen = MyEighteen.builder()
-                .user(user)
-                .music(music)
-                .build();
-        String addDataUrl = String.format(env.getProperty("search-engine.url")) + "/data/" + userId;
-        SearchDto searchDto = new SearchDto(myEighteen.getMusic());
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<SearchDto> requestEntity = new HttpEntity<>(searchDto, headers);
-        myEighteenRepository.save(myEighteen);
+        MyEighteen check = myEighteenRepository.findByUserAndMusic(user, music);
+        if (check == null) {
+            MyEighteen myEighteen = MyEighteen.builder()
+                    .user(user)
+                    .music(music)
+                    .build();
+            myEighteenRepository.save(myEighteen);
+        }
         return music.getTitle();
     }
 

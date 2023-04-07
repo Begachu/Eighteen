@@ -6,7 +6,7 @@ const RecommendEmotionSelector = (): JSX.Element => {
   const [search, setSearch] = useSearchParams();
 
   useEffect(() => {
-    if (!search.get("emotion")) toggleSearch("happy");
+    if (!search.get("emotion")) toggleSearch("1");
   }, []);
 
   const toggleSearch = (emotion: string) => {
@@ -64,10 +64,10 @@ const StyledDiv = styled.div<{ pointer: number }>`
 `;
 
 const emotionList = [
-  { text: "기쁨", value: "happy" },
-  { text: "슬픔", value: "sad" },
-  { text: "분노", value: "angry" },
-  { text: "사랑", value: "love" },
+  { text: "기쁨", value: "1" },
+  { text: "슬픔", value: "2" },
+  { text: "분노", value: "3" },
+  { text: "사랑", value: "4" },
 ];
 
 export default RecommendEmotionSelector;

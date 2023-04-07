@@ -1,1 +1,1 @@
-export type RecommendType = "myEighteen" | "weather" | "emotion" | "situation";
+export type RecommendType = "my_eighteen" | "weather" | "emotion" | "situation";

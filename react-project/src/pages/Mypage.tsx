@@ -17,8 +17,6 @@ interface Music {
   title: string;
 }
 
-const musics: number[] = JSON.parse(localStorage.getItem("song-history") || "[]");
-
 /*
  * 마이페이지
  */
@@ -44,7 +42,7 @@ const Mypage = (): JSX.Element => {
 
     async function getHistory() {
       try {
-        const { data } = await getSongHistory(musics, auth.token);
+        const { data } = await getSongHistory(JSON.parse(localStorage.getItem("song-history") || "[]"), auth.token);
         setMusicList(data);
       } catch (e) {
         if (axios.isAxiosError(e)) {
@@ -55,11 +53,8 @@ const Mypage = (): JSX.Element => {
       }
     }
 
-    if (user?.gender == "M") {
-      setDummyGender("남성");
-    } else if (user?.gender == "F") {
-      setDummyGender("여성");
-    }
+    if (user?.gender == "M") setDummyGender("남성");
+    else if (user?.gender == "F") setDummyGender("여성");
 
     getUser();
     getHistory();

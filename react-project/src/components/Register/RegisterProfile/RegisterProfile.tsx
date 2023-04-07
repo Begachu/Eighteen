@@ -23,9 +23,10 @@ interface Props {
 
 const RegisterProfile = ({ nextPage }: Props): JSX.Element => {
   const [auth, setAuth] = useRecoilState(authState);
+  const [user, setUser] = useRecoilState(userState);
+  const [datePicker, setDatePicker] = useState<number>(0);
   const [pass, setPass] = useState<boolean>(false);
   const [shake, setShake] = useState<boolean>(false);
-  const [user, setUser] = useRecoilState(userState);
 
   if (!user) return <></>;
   const { birth, gender, nickname } = user;
@@ -40,6 +41,7 @@ const RegisterProfile = ({ nextPage }: Props): JSX.Element => {
 
   const setBirth = (date: Date | null) => {
     if (date) setUser({ ...user, birth: moment(date).format("YYYY-MM-DD") });
+    setDatePicker(datePicker - 1);
   };
 
   const onShake = () => {
@@ -92,8 +94,14 @@ const RegisterProfile = ({ nextPage }: Props): JSX.Element => {
         <div className="data">
           <label>생년월일</label>
           <DatePicker
+            open={Boolean(datePicker)}
+            onInputClick={() => setDatePicker(3)}
+            onClickOutside={() => setDatePicker(0)}
             selected={moment(birth, "YYYY-MM-DD").toDate()}
             dateFormat={"yyyy-MM-dd"}
+            // showYearPicker={yearPicker}
+            showMonthYearPicker={datePicker == 2}
+            showYearPicker={datePicker == 3}
             dateFormatCalendar={"yyyy년 MM월"}
             customInput={<RegusterProfileDataPicker />}
             locale="ko"
@@ -142,7 +150,7 @@ const StyledDiv = styled.div`
 
   & > .next-button {
     width: 100%;
-    margin-top: 20vw;
+    margin-top: 60px;
     display: flex;
     justify-content: center;
   }
@@ -164,12 +172,23 @@ const StyledDiv = styled.div`
     & .react-datepicker__navigation {
       top: 16px;
     }
-    & .react-datepicker__current-month {
+    & .react-datepicker__current-month,
+    & .react-datepicker-month-header,
+    & .react-datepicker-year-header {
       padding: 8px;
       color: var(--blue-500);
       font-size: 16px;
       font-weight: 900;
       letter-spacing: 0;
+    }
+    & .react-datepicker__year-wrapper {
+      justify-content: center;
+    }
+    & .react-datepicker__year-text,
+    & .react-datepicker__month-text {
+      height: 32px;
+      line-height: 32px;
+      font-size: 16px;
     }
     & .react-datepicker__triangle {
       &::after,
@@ -180,9 +199,12 @@ const StyledDiv = styled.div`
     & .react-datepicker__day {
       border-radius: 50%;
     }
-    & .react-datepicker__day--selected {
+    & .react-datepicker__day--selected,
+    & .react-datepicker__year-text--selected,
+    & .react-datepicker__month--selected,
+    & .react-datepicker__month-text--selected {
       font-weight: 900;
-      background-color: var(--blue-500);
+      background-color: var(--blue-500) !important;
     }
   }
 `;

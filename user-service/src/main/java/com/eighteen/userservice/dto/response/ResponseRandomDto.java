@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.List;
+import java.util.Set;
 
 @NoArgsConstructor
 @Getter
@@ -15,6 +16,6 @@ import java.util.List;
 public class ResponseRandomDto {
 
     @ApiModelProperty(value = "빠른선곡 목록", required = true)
-    private List<MusicDto> randoms;
+    private Set<MusicDto> randoms;
 
 }

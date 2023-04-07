@@ -55,11 +55,10 @@ const StyledDiv = styled.div`
       pointer-events: none;
     }
   }
-  & > div {
-  }
   & > .next-button {
     width: 100%;
     margin: 64px 0;
+    padding-bottom: 80px;
     display: flex;
     justify-content: center;
   }

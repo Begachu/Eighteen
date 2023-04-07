@@ -34,8 +34,8 @@ react-project:
   script:
     - cd react-project
     - CI=false npm run build
-    - docker build -t react-project .
-    - ls $CI_PROJECT_DIR
+    - docker build -t itmagician/b304-eighteen:react-project .
+    - docker push itmagician/b304-eighteen:react-project
   artifacts:
     paths:
       - $CI_PROJECT_DIR/react-project/build
@@ -75,7 +75,7 @@ deploy-job/react-project:replace_docker_container:      # This job runs in the d
   # allow_failure: true
   when: on_success
   script:
-    - docker run -p 3000:80 --name react-project -d react-project
+    - docker run -p 3000:80 --name react-project -d itmagician/b304-eighteen:react-project
 
 
 
@@ -90,7 +90,8 @@ user-service:
     - cd user-service
     - chmod +x gradlew
     - ./gradlew clean bootJar
-    - docker build -t user-service .
+    - docker build -t itmagician/b304-eighteen:user-service .
+    - docker push itmagician/b304-eighteen:user-service
 
 deploy-job/user-service:preparing_for_replace:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -112,7 +113,7 @@ deploy-job/user-service:replace_docker_container:      # This job runs in the de
   # allow_failure: true
   when: on_success
   script:
-    - docker run -p 9001:8080 --name user-service -d user-service
+    - docker run -p 9001:8080 --name user-service -d itmagician/b304-eighteen:user-service
 
 
 search-engine:
@@ -123,7 +124,8 @@ search-engine:
     - cd search-engine
     - chmod +x gradlew
     - ./gradlew clean bootJar
-    - docker build -t search-engine .
+    - docker build -t itmagician/b304-eighteen:search-engine .
+    - docker push itmagician/b304-eighteen:search-engine
 
 deploy-job/search-engine:preparing_for_replace:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -145,7 +147,7 @@ deploy-job/search-engine:replace_docker_container:      # This job runs in the d
   # allow_failure: true
   when: on_success
   script:
-    - docker run -p 9002:8080 --name search-engine -d search-engine
+    - docker run -p 9002:8080 --name search-engine -d itmagician/b304-eighteen:search-engine
 
 auth-service:
   stage: build
@@ -155,7 +157,8 @@ auth-service:
     - cd auth-service
     - chmod +x gradlew
     - ./gradlew clean bootJar
-    - docker build -t auth-service .
+    - docker build -t itmagician/b304-eighteen:auth-service .
+    - docker push itmagician/b304-eighteen:auth-service
 
 deploy-job/auth-service:preparing_for_replace:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -177,7 +180,7 @@ deploy-job/auth-service:replace_docker_container:      # This job runs in the de
   # allow_failure: true
   when: on_success
   script:
-    - docker run -p 9003:8080 --name auth-service -d auth-service
+    - docker run -p 9003:8080 --name auth-service -d itmagician/b304-eighteen:auth-service
 
 
 
@@ -190,7 +193,8 @@ flask:
     - develop
   script:
     - cd flask
-    - docker build -t flask .
+    - docker build -t itmagician/b304-eighteen:flask .
+    - docker push itmagician/b304-eighteen:flask
 
 deploy-job/flask:preparing_for_replace:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
@@ -212,7 +216,7 @@ deploy-job/flask:replace_docker_container:      # This job runs in the deploy st
   # allow_failure: true
   when: on_success
   script:
-    - docker run -p 9004:5000 --name flask -d flask
+    - docker run -p 9004:5000 --name flask -d itmagician/b304-eighteen:flask
 
 
 
@@ -224,7 +228,8 @@ batch-service:
     - cd batch-service
     - chmod +x gradlew
     - ./gradlew clean bootJar
-    - docker build -t batch-service .
+    - docker build -t itmagician/b304-eighteen:batch-service .
+    - docker push itmagician/b304-eighteen:batch-service
 
 
 deploy-job/batch-service:preparing_for_replace:      # This job runs in the deploy stage.
@@ -247,4 +252,4 @@ deploy-job/batch-service:replace_docker_container:      # This job runs in the d
   # allow_failure: true
   when: on_success
   script:
-    - docker run --name batch-service -d batch-service
+    - docker run --name batch-service -d itmagician/b304-eighteen:batch-service

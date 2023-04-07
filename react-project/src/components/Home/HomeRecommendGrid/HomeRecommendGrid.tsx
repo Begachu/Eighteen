@@ -22,7 +22,7 @@ const HomeRecommendGrid = (): JSX.Element => {
   return (
     <StyledDiv>
       <div>
-        <button value={"myEighteen"} onClick={onClickRecommend}>
+        <button value={"my_eighteen"} onClick={onClickRecommend}>
           <img src={`${process.env.PUBLIC_URL}/img/my_eighteen.png`} />
           <span>취향맞춤 추천</span>
           <h2>

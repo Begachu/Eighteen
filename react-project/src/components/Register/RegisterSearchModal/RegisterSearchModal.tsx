@@ -27,20 +27,21 @@ const RegisterSearchModal = ({ show, close }: Props): JSX.Element => {
     close();
   };
   return (
-    <StyledDiv className={status}>
-      <div className="background" />
-      <button className="close-button" onClick={onClose}>
-        <TbX />
-      </button>
-      <RegisterFavoriteInput />
-      <SongResultList />
+    <StyledDiv className={status} id="modal">
+      <div>
+        <div className="background" />
+        <button className="close-button" onClick={onClose}>
+          <TbX />
+        </button>
+        <RegisterFavoriteInput />
+        <SongResultList scrollId="modal" />
+      </div>
     </StyledDiv>
   );
 };
 
 const StyledDiv = styled.div`
   overflow: auto;
-  display: flex;
   transition: all 0.2s;
   box-sizing: border-box;
   padding: 16px 16px;
@@ -51,7 +52,6 @@ const StyledDiv = styled.div`
   z-index: 1;
   top: 100%;
   left: 0;
-  flex-direction: column;
 
   &.hidden {
     top: 100%;
@@ -59,49 +59,55 @@ const StyledDiv = styled.div`
   &.visible {
     top: 0;
   }
-
-  & > .background {
-    position: sticky;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    overflow: visible;
-    &::after {
-      position: absolute;
-      background: linear-gradient(to top, transparent 0.1%, var(--black-900));
-      content: "";
-      z-index: -1;
-      width: calc(100% + 32px);
-      height: 240px;
-      top: -16px;
-      left: -16px;
-    }
-  }
-
-  & > .close-button {
-    position: sticky;
-    top: 32px;
-    z-index: 1;
-    align-self: end;
-    margin: 32px 0;
+  & > div {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 68px;
-    min-height: 68px;
-    font-size: 40px;
-    background-color: var(--black-opacity);
-    color: var(--black-50);
-    border: 0;
-    border-radius: 50%;
-  }
-  & > div:nth-child(3) {
-    position: sticky;
-    top: 132px;
-    z-index: 1;
-  }
-  & > div:last-child {
-    padding-bottom: 60px;
+    flex-direction: column;
+    margin: auto;
+    width: 100%;
+    max-width: 800px;
+    & > .background {
+      position: sticky;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      overflow: visible;
+      &::after {
+        position: absolute;
+        background: linear-gradient(to top, transparent 0.1%, var(--black-900));
+        content: "";
+        z-index: -1;
+        width: calc(100% + 32px);
+        height: 240px;
+        top: -16px;
+        left: -16px;
+      }
+    }
+
+    & > .close-button {
+      position: sticky;
+      top: 32px;
+      z-index: 1;
+      align-self: end;
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 68px;
+      min-height: 68px;
+      font-size: 40px;
+      background-color: var(--black-opacity);
+      color: var(--black-50);
+      border: 0;
+      border-radius: 50%;
+    }
+    & > div:nth-child(3) {
+      position: sticky;
+      top: 132px;
+      z-index: 1;
+    }
+    & > div:last-child {
+      padding-bottom: 60px;
+    }
   }
   // scroll CSS
   &::-webkit-scrollbar {

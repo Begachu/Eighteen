@@ -8,7 +8,7 @@ import RegisterFinalSilde from "../components/Register/RegisterFinalSilde";
 const Register = (): JSX.Element => {
   const [page, setPage] = useState<number>(0);
   return (
-    <StyledDiv>
+    <StyledDiv className={page === 2 ? "fixed" : ""}>
       {page === 0 && <RegisterProfile nextPage={() => setPage(1)} />}
       {page === 1 && <RegisterFavoriteSetting nextPage={() => setPage(2)} />}
       {page === 2 && <RegisterFinalSilde />}
@@ -18,14 +18,19 @@ const Register = (): JSX.Element => {
 };
 
 const StyledDiv = styled.div`
-  height: 100vh;
+  min-height: 100vh;
   width: 100vw;
   position: relative;
-  overflow: hidden;
   padding: 120px 32px 0;
+  &.fixed {
+    height: 100vh;
+    overflow: hidden;
+  }
   & h1,
   & h2 {
     font-weight: 400;
+    -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) both;
     & > span {
       margin: 8px 0px;
       display: block;
@@ -39,9 +44,15 @@ const StyledDiv = styled.div`
   }
   & h2 {
     font-size: 20px;
+    animation-delay: 0.4s;
   }
   & > div:last-child {
     left: -16px;
+  }
+  & > div > div {
+    -webkit-animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) backwards;
+    animation: fade-in-bottom 0.6s cubic-bezier(0.39, 0.575, 0.565, 1) backwards;
+    animation-delay: 0.8s;
   }
 `;
 

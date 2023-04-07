@@ -6,7 +6,7 @@ import { RecommendType } from "./type";
  * @param recommend 추천방식(myEighteen, weather, emotion, situation)
  * @param id 추천선택 id
  */
-const recommendSong = (recommend: RecommendType, token: string, id?: number) => {
+const recommendSong = (recommend: RecommendType, token: string, id?: string) => {
   instance.defaults.headers["Authorization"] = token;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: any = {};

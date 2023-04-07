@@ -9,6 +9,8 @@ import { addEighteenForSearch, removeEighteenForSearch } from "../../../../apis/
 
 interface Props {
   musicId: number;
+  singer: string;
+  title: string;
   isEighteen: boolean;
   setEighteen(bool: boolean): void;
   onCustomClick?(): void;
@@ -17,7 +19,7 @@ interface Props {
 /**
  * 음악 애창곡 등록 버튼 컴포넌트
  */
-const SongFavoriteButton = ({ musicId, isEighteen, setEighteen, onCustomClick }: Props): JSX.Element => {
+const SongFavoriteButton = ({ musicId, singer, title, isEighteen, setEighteen, onCustomClick }: Props): JSX.Element => {
   const [auth, setAuth] = useRecoilState(authState);
   const loading = useRef<boolean>(false);
 
@@ -37,10 +39,10 @@ const SongFavoriteButton = ({ musicId, isEighteen, setEighteen, onCustomClick }:
     try {
       if (isEighteen) {
         await removeEighteen([musicId], auth.token);
-        await removeEighteenForSearch([{ id: musicId }], auth.token);
+        await removeEighteenForSearch([{ id: musicId, singer, title }], auth.token);
       } else {
         await addEighteen(musicId, auth.token);
-        await addEighteenForSearch([{ id: musicId }], auth.token);
+        await addEighteenForSearch([{ id: musicId, singer, title }], auth.token);
       }
       success = true;
     } catch (e) {
