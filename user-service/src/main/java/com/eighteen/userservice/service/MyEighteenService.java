@@ -104,8 +104,8 @@ public class MyEighteenService {
 
         User user = userRepository.findByUserId(userId);
         Music music = musicRepository.findByMusicId(requestEighteenDto.getMusicId());
-        MyEighteen myEighteen = myEighteenRepository.findByUserAndMusic(user, music);
-        if (myEighteen == null) {
+        MyEighteen check = myEighteenRepository.findByUserAndMusic(user, music);
+        if (check == null) {
             MyEighteen myEighteen = MyEighteen.builder()
                     .user(user)
                     .music(music)
