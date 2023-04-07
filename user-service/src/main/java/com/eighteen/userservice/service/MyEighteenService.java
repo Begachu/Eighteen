@@ -104,11 +104,14 @@ public class MyEighteenService {
 
         User user = userRepository.findByUserId(userId);
         Music music = musicRepository.findByMusicId(requestEighteenDto.getMusicId());
-        MyEighteen myEighteen = MyEighteen.builder()
-                .user(user)
-                .music(music)
-                .build();
-        myEighteenRepository.save(myEighteen);
+        MyEighteen myEighteen = myEighteenRepository.findByUserAndMusic(user, music);
+        if (myEighteen == null) {
+            MyEighteen myEighteen = MyEighteen.builder()
+                    .user(user)
+                    .music(music)
+                    .build();
+            myEighteenRepository.save(myEighteen);
+        }
         return music.getTitle();
     }
 
